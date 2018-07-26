@@ -1,0 +1,120 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "Api Documentation",
+    "version": "1.0",
+    "title": "Api Documentation",
+    "termsOfService": "urn:tos",
+    "contact": {},
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0"
+    }
+  },
+  "host": "localhost:8080",
+  "basePath": "/",
+  "tags": [
+    {
+      "name": "mini-program-controller",
+      "description": "小程序控制器"
+    }
+  ],
+  "paths": {
+    "/mini/login/jscode2session": {
+      "get": {
+        "tags": [
+          "mini-program-controller"
+        ],
+        "summary": "小程序登录接口",
+        "description": "必要的参数为wx.login接口返回的code, 返回token参数. 需要将该token在之后请求数据接口时加到head中",
+        "operationId": "jscode2sessionUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name": "jscode",
+            "in": "query",
+            "description": "wx.login接口返回的code",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/TokenResult"
+            }
+          }
+        }
+      }
+    },
+    "/mini/test": {
+      "get": {
+        "tags": [
+          "mini-program-controller"
+        ],
+        "summary": "test",
+        "operationId": "testUsingGET",
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "*/*"
+        ],
+        "parameters": [
+          {
+            "name":"token",
+            "in":"header",
+            "required":true,
+            "type":"string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "schema": {
+              "$ref": "#/definitions/Result"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
+    "Result": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "返回码"
+        },
+        "desc": {
+          "type": "string",
+          "description": "返回码描述"
+        }
+      }
+    },
+    "TokenResult": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "description": "返回码"
+        },
+        "desc": {
+          "type": "string",
+          "description": "返回码描述"
+        },
+        "token": {
+          "type": "string",
+          "description": "token, 在之后请求数据接口时加到head中"
+        }
+      }
+    }
+  }
+}

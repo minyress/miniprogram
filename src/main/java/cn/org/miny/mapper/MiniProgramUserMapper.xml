@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为IUserDao接口方法提供sql语句配置 -->
+<mapper namespace="cn.org.miny.mapper.MiniProgramUserMapper">
+
+    <insert id="initUser" parameterType="MiniProgramUser">
+        INSERT INTO `all_miniprogram_user` (`id`, `nick_name`, `gender`, `language`, `city`, `province`, `country`, `avatar_url`, `openid`, `join_time`)
+        VALUES (#{id}, #{nickName}, #{gender}, #{language}, #{city}, #{province}, #{country}, #{avatarUrl}, #{openid}, #{joinTime});
+    </insert>
+
+
+    <update id="updateUser" parameterType="MiniProgramUser">
+        UPDATE `all_miniprogram_user` SET
+        `nick_name` = #{nickName},
+        `gender` = #{gender},
+        `language` = #{language},
+        `city` = #{city},
+        `province` = #{province},
+        `country` = #{country},
+        `avatar_url` = #{avatarUrl}
+        WHERE `openid` = #{openid}
+    </update>
+</mapper>
