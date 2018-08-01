@@ -2,17 +2,26 @@ package cn.org.miny.util;
 
 import com.alibaba.fastjson.JSON;
 import lombok.NonNull;
+import org.springframework.data.redis.core.StringRedisTemplate;
+import org.springframework.web.context.ContextLoader;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 /**
+ * Redis操作类
  * Created by limingyang on 2018/7/19.
  */
 public class RedisUtil {
 
-    private static final Map<String, Object> REDIS = new HashMap<>();
+    /**
+     * 方式一
+     */
+//    private static RedisTemplate<String, String> template = ContextLoader.getCurrentWebApplicationContext().getBean("stringRedisTemplate", StringRedisTemplate.class);
+
+    /**
+     * 方式二
+     */
+    private static StringRedisTemplate stringRedisTemplate = ContextLoader.getCurrentWebApplicationContext().getBean("stringRedisTemplate", StringRedisTemplate.class);
 
     /**
      * 设置value
@@ -33,7 +42,7 @@ public class RedisUtil {
      * @param timeUnit 时间单位
      */
     public static void set(@NonNull String key, @NonNull Object value, @NonNull long timeout, @NonNull TimeUnit timeUnit) {
-        REDIS.put(key, value);
+        stringRedisTemplate.opsForValue().set(key, (String) value);
     }
 
     /**
@@ -43,7 +52,7 @@ public class RedisUtil {
      * @return
      */
     public static String get(@NonNull String key) {
-        return String.valueOf(REDIS.get(key));
+        return stringRedisTemplate.opsForValue().get(key);
     }
 
     /**
@@ -59,11 +68,23 @@ public class RedisUtil {
     }
 
     /**
-     * 删除
-     *
+     * 删除key
      * @param key
      */
     public static void delete(@NonNull String key) {
-        REDIS.remove(key);
+        if (stringRedisTemplate.hasKey(key)) {
+            stringRedisTemplate.delete(key);
+        }
     }
+
+    /**
+     * key是否存在
+     * @param key
+     * @return
+     */
+    public static boolean hasKey(@NonNull String key) {
+        return stringRedisTemplate.hasKey(key);
+    }
+
+
 }

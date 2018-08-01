@@ -10,6 +10,7 @@ import cn.org.miny.model.MiniProgramUser;
 import cn.org.miny.service.MiniService;
 import cn.org.miny.util.RedisUtil;
 import cn.org.miny.util.TokenUtil;
+import com.alibaba.fastjson.JSON;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,8 +60,16 @@ public class MiniServiceImpl implements MiniService {
 
     @Override
     public MiniProgramUser findMiniUserByOpenid(String openid) {
-        //todo 需要缓存中数据
-        return this.miniProgramUserMapper.findByOpenId(openid);
+        MiniProgramUser user = null;
+        String cacheKey = "user_" + openid;
+        if (RedisUtil.hasKey(cacheKey)) {
+            String json = RedisUtil.get(cacheKey);
+            user = JSON.parseObject(json, MiniProgramUser.class);
+        } else {
+            user = this.miniProgramUserMapper.findByOpenId(openid);
+            RedisUtil.set(cacheKey, JSON.toJSONString(user));
+        }
+        return user;
     }
 
     @Override

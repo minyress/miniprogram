@@ -72,7 +72,7 @@ public abstract class BaseController {
      * @return
      */
     public MiniProgramUser getMiniProgramUser() throws Exception {
-        String token = request.getHeader("token");
+        String token = this.request.getHeader("token");
         if (StringUtils.isEmpty(token)) {
             throw new Exception("登录信息为空");
         }
