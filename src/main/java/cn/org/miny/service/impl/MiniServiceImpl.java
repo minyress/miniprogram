@@ -2,6 +2,7 @@ package cn.org.miny.service.impl;
 
 //import cn.org.miny.dao.IUserDao;
 
+import cn.org.miny.common.Configure;
 import cn.org.miny.common.MiniProgramAPIUtil;
 import cn.org.miny.dto.MiniProgramSession;
 import cn.org.miny.dto.MiniProgramUserDTO;
@@ -20,9 +21,9 @@ import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 /**
- *
  * Created by limingyang on 2018/7/17.
  */
 @Service("miniService")
@@ -54,7 +55,7 @@ public class MiniServiceImpl implements MiniService {
             miniProgramUser.setJoinTime(now);
             this.miniProgramUserMapper.initUser(miniProgramUser);
         }
-        RedisUtil.set(miniProgramSession.getSessionKey(), miniProgramUser.getOpenid());
+        RedisUtil.set(miniProgramSession.getSessionKey(), miniProgramUser.getOpenid(), Configure.TOKEN_EXP, TimeUnit.MILLISECONDS);
         return TokenUtil.createToken(miniProgramSession.getSessionKey());
     }
 

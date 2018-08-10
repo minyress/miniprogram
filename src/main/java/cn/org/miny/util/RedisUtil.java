@@ -5,6 +5,7 @@ import lombok.NonNull;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.context.ContextLoader;
 
+import java.util.Arrays;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -25,29 +26,26 @@ public class RedisUtil {
 
     /**
      * 设置value
-     *
      * @param key
      * @param value
      */
     public static void set(@NonNull String key, @NonNull Object value) {
-        set(key, value, 100000, TimeUnit.HOURS);
+        stringRedisTemplate.opsForValue().set(key, (String) value);
     }
 
     /**
      * 设置value
-     *
      * @param key
      * @param value
      * @param timeout  有效时间
      * @param timeUnit 时间单位
      */
     public static void set(@NonNull String key, @NonNull Object value, @NonNull long timeout, @NonNull TimeUnit timeUnit) {
-        stringRedisTemplate.opsForValue().set(key, (String) value);
+        stringRedisTemplate.opsForValue().set(key, (String) value, timeout, timeUnit);
     }
 
     /**
      * 获取value
-     *
      * @param key
      * @return
      */
@@ -57,7 +55,6 @@ public class RedisUtil {
 
     /**
      * 获取value对象
-     *
      * @param key
      * @param clazz
      * @param <T>
@@ -75,6 +72,40 @@ public class RedisUtil {
         if (stringRedisTemplate.hasKey(key)) {
             stringRedisTemplate.delete(key);
         }
+    }
+
+    /**
+     * 删除key
+     * @param keys
+     */
+    public static void delete(@NonNull String... keys) {
+        stringRedisTemplate.delete(Arrays.asList(keys));
+    }
+
+    /**
+     * 设置key的过期时间
+     * @param key
+     * @param timeout
+     * @param timeUnit
+     */
+    public static void expire(@NonNull String key, @NonNull long timeout, @NonNull TimeUnit timeUnit) {
+        stringRedisTemplate.expire(key, timeout, timeUnit);
+    }
+
+    /**
+     * 获取key的过期时间
+     * @param key
+     */
+    public static void getExpire(@NonNull String key) {
+        stringRedisTemplate.getExpire(key);
+    }
+
+    /**
+     * 获取key的过期时间
+     * @param key
+     */
+    public static void getExpire(@NonNull String key, @NonNull TimeUnit timeUnit) {
+        stringRedisTemplate.getExpire(key, timeUnit);
     }
 
     /**

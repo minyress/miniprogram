@@ -25,7 +25,7 @@
   <!-- 小程序登录拦截器 -->
   <filter>
     <filter-name>miniFilter</filter-name>
-    <filter-class>cn.org.miny.filter.MiniLoginFilter</filter-class>
+    <filter-class>cn.org.miny.filter.LoginFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>miniFilter</filter-name>

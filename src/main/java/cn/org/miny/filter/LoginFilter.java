@@ -26,12 +26,12 @@ import java.io.IOException;
  * 小程序登录拦截
  * Created by limingyang on 2018/7/19.
  */
-public class MiniLoginFilter extends OncePerRequestFilter {
+public class LoginFilter extends OncePerRequestFilter {
 
     /**
      *
      */
-    private static final Logger logger = LoggerFactory.getLogger(MiniLoginFilter.class);
+    private static final Logger logger = LoggerFactory.getLogger(LoginFilter.class);
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
