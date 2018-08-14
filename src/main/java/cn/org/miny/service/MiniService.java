@@ -17,7 +17,6 @@ public interface MiniService {
      */
     String miniProgramLogin(String jscode) throws Exception;
 
-
     /**
      * 通过openid查询小程序用户
      * @param openid openid
@@ -30,5 +29,5 @@ public interface MiniService {
      * @param user 用户信息
      * @param miniProgramUser 当前登录用户
      */
-    void miniProgramUser(MiniProgramUserDTO user, MiniProgramUser miniProgramUser) throws Exception;
+    void updateUserinfo(MiniProgramUserDTO user, MiniProgramUser miniProgramUser) throws Exception;
 }

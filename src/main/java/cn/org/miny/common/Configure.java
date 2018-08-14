@@ -67,7 +67,7 @@ public class Configure {
      */
     public static Boolean IS_ENABLE_SWAGGER_UI;
 
-    static void init() {
+    public static void init() {
         Properties props = new Properties();
         InputStream is = null;
         try {

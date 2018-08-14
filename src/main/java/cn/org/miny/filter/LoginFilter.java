@@ -3,6 +3,7 @@ package cn.org.miny.filter;
 import cn.org.miny.common.Result;
 import cn.org.miny.model.MiniProgramUser;
 import cn.org.miny.service.MiniService;
+import cn.org.miny.util.RedisKey;
 import cn.org.miny.util.RedisUtil;
 import cn.org.miny.util.TokenUtil;
 import com.alibaba.fastjson.JSON;
@@ -61,7 +62,7 @@ public class LoginFilter extends OncePerRequestFilter {
             error("111", "token不合法", response);
             return;
         }
-        String openid = RedisUtil.get(sessionKey);
+        String openid = RedisUtil.get(RedisKey.USER_SESSION_KEY + sessionKey);
         if (StringUtils.isEmpty(openid)) {
             error("111", "登录超时,请重新登录！", response);
             return;

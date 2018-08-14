@@ -2,6 +2,7 @@ package cn.org.miny.common;
 
 import cn.org.miny.model.MiniProgramUser;
 import cn.org.miny.service.MiniService;
+import cn.org.miny.util.RedisKey;
 import cn.org.miny.util.RedisUtil;
 import cn.org.miny.util.TokenUtil;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -89,7 +90,7 @@ public abstract class BaseController {
             logger.info(e.getMessage());
             throw new Exception("登录超时");
         }
-        String openid = RedisUtil.get(sessionKey);
+        String openid = RedisUtil.get(RedisKey.USER_SESSION_KEY + sessionKey);
         if (StringUtils.isEmpty(openid)) {
             throw new Exception("登录超时");
         }

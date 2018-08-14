@@ -9,6 +9,7 @@ import cn.org.miny.dto.MiniProgramUserDTO;
 import cn.org.miny.mapper.MiniProgramUserMapper;
 import cn.org.miny.model.MiniProgramUser;
 import cn.org.miny.service.MiniService;
+import cn.org.miny.util.RedisKey;
 import cn.org.miny.util.RedisUtil;
 import cn.org.miny.util.TokenUtil;
 import com.alibaba.fastjson.JSON;
@@ -55,26 +56,27 @@ public class MiniServiceImpl implements MiniService {
             miniProgramUser.setJoinTime(now);
             this.miniProgramUserMapper.initUser(miniProgramUser);
         }
-        RedisUtil.set(miniProgramSession.getSessionKey(), miniProgramUser.getOpenid(), Configure.TOKEN_EXP, TimeUnit.MILLISECONDS);
+        String cacheKey = RedisKey.USER_SESSION_KEY + miniProgramSession.getSessionKey();
+        RedisUtil.set(cacheKey, miniProgramUser.getOpenid(), Configure.TOKEN_EXP, TimeUnit.MILLISECONDS);
         return TokenUtil.createToken(miniProgramSession.getSessionKey());
     }
 
     @Override
     public MiniProgramUser findMiniUserByOpenid(String openid) {
         MiniProgramUser user = null;
-        String cacheKey = "user_" + openid;
+        String cacheKey = RedisKey.USER_OPENID + openid;
         if (RedisUtil.hasKey(cacheKey)) {
             String json = RedisUtil.get(cacheKey);
             user = JSON.parseObject(json, MiniProgramUser.class);
         } else {
             user = this.miniProgramUserMapper.findByOpenId(openid);
-            RedisUtil.set(cacheKey, JSON.toJSONString(user));
+            RedisUtil.set(cacheKey, JSON.toJSONString(user), Configure.TOKEN_EXP, TimeUnit.MILLISECONDS);
         }
         return user;
     }
 
     @Override
-    public void miniProgramUser(MiniProgramUserDTO user, MiniProgramUser miniProgramUser) throws Exception {
+    public void updateUserinfo(MiniProgramUserDTO user, MiniProgramUser miniProgramUser) throws Exception {
         if (ObjectUtils.isEmpty(user)) {
             throw new Exception("修改的用户信息为空");
         } else if (ObjectUtils.isEmpty(miniProgramUser)) {
@@ -88,6 +90,8 @@ public class MiniServiceImpl implements MiniService {
         miniProgramUser.setCountry(user.getCountry());
         miniProgramUser.setAvatarUrl(user.getAvatarUrl());
         this.miniProgramUserMapper.updateUser(miniProgramUser);
+        //删除缓存中的用户信息
+        RedisUtil.delete(RedisKey.USER_OPENID + miniProgramUser.getOpenid());
     }
 
 

@@ -32,7 +32,7 @@ public class UserInfoController extends BaseController {
     @RequestMapping(value = {"/userinfo"}, method = {RequestMethod.PUT})
     public Result updateUserinfo(@RequestBody(required = true) MiniProgramUserDTO user) throws Exception {
         MiniProgramUser miniProgramUser = super.getMiniProgramUser();
-        this.miniService.miniProgramUser(user, miniProgramUser);
+        this.miniService.updateUserinfo(user, miniProgramUser);
         return super.success();
     }
 
